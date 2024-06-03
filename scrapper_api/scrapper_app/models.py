@@ -1,3 +1,5 @@
+# scrapper_app/models.py
+
 from django.db import models
 
 class ScrapedData(models.Model):
