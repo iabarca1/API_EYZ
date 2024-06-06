@@ -36,7 +36,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'scraper_project.urls'
+ROOT_URLCONF = 'scrapper_api.urls'
 
 TEMPLATES = [
     {
@@ -54,7 +54,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'scraper_project.wsgi.application'
+WSGI_APPLICATION = 'scrapper_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

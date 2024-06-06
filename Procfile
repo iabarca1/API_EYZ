@@ -1,1 +1,1 @@
-web: gunicorn API_EYZ.wsgi
+web: gunicorn scrapper_api.wsgi
