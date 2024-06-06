@@ -9,6 +9,7 @@ from scrapper_app.models import ScrapedData
 from scrapper_app.serializers import ScrapedDataSerializer
 from scrapper_app.scrapers.kupfer4 import run_kupfer_scraper
 from scrapper_app.scrapers.run_all_scrapers import run_all_scrapers
+from .tasks import run_all_scrapers_task
 
 class ScrapedDataList(generics.ListCreateAPIView):
     queryset = ScrapedData.objects.all()
@@ -21,5 +22,5 @@ class RunKupferScraperView(APIView):
 
 class RunAllScrapersView(APIView):
     def get(self, request, format=None):
-        run_all_scrapers()
-        return Response({"status": "All scrapers run successfully"}, status=status.HTTP_200_OK)
+        run_all_scrapers_task.delay()
+        return Response({"status": "Scrapers are running in the background"}, status=status.HTTP_200_OK)
