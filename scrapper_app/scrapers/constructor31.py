@@ -11,6 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from scrapper_app.models import ScrapedData
 
+data =[]
+
 def close_popup(driver):
     try:
         popup_button = WebDriverWait(driver, 2).until(
@@ -55,6 +57,8 @@ def run_constructor_scraper():
             titulo = producto.find_element(By.XPATH, './/span[@class="vtex-product-summary-2-x-productBrand vtex-product-summary-2-x-productBrand--nombreProducto vtex-product-summary-2-x-brandName vtex-product-summary-2-x-brandName--nombreProducto t-body"]').text.replace(',', '.')
             precios = producto.find_elements(By.XPATH, './/span[@class="vtex-product-price-1-x-sellingPriceValue vtex-product-price-1-x-sellingPriceValue--preciobulonfer"]/span')
             texto_precio = [precio.text for precio in precios][0]
-            ScrapedData.objects.create(source="Constructor31", product_name=titulo, price=texto_precio)
+            data.append(ScrapedData.objects.create(source="Constructor31", product_name=titulo, price=texto_precio))
 
     driver.quit()
+    print("Running constructor scraper")
+    return {"scraper": "constructor", "status": "success", "data": data }

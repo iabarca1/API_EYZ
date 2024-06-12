@@ -9,6 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import NoSuchElementException
 from scrapper_app.models import ScrapedData
 
+data = []
 def run_kupfer_scraper():
     urls = [
         'https://www.kupfer.cl/aceros/perfiles.html',
@@ -45,7 +46,7 @@ def run_kupfer_scraper():
 
                 precio = precio_oferta if precio_oferta != "No hay precio oferta" else precio_original
 
-                ScrapedData.objects.create(source="Kupfer", product_name=titulo, price=precio)
+                data.append(ScrapedData.objects.create(source="Kupfer", product_name=titulo, price=precio))
 
             try:
                 boton_siguiente = driver.find_element(By.XPATH, '//a[@class="action  next"]')
@@ -54,3 +55,5 @@ def run_kupfer_scraper():
                 break
 
     driver.quit()
+    print("Running Kupfer scraper")
+    return {"scraper": "kupfer", "status": "success", "data": data }

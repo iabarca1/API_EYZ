@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import Select
 from scrapper_app.models import ScrapedData
-
+data=[]
 def run_construmart_scraper():
     opts = Options()
     opts.add_argument("user-agent=Mozilla/5.0")
@@ -71,6 +71,9 @@ def run_construmart_scraper():
             except:
                 texto_precio = "Sin precio"
 
-            ScrapedData.objects.create(source="Construmart", product_name=titulo, price=texto_precio)
+            data.append(ScrapedData.objects.create(source="Construmart", product_name=titulo, price=texto_precio))
 
     driver.quit()
+    print("Running construmart scraper")
+    return {"scraper": "construmart", "status": "success", "data": data }
+

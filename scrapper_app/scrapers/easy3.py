@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import NoSuchElementException
 from scrapper_app.models import ScrapedData
-
+data=[]
 def run_easy_scraper():
     urls = [
         'https://www.easy.cl/materiales-de-construccion/perfiles-de-acero-y-galvanizados',
@@ -49,7 +49,7 @@ def run_easy_scraper():
             for producto in productos:
                 titulo = producto.find_element(By.XPATH, './/span[@class="vtex-product-summary-2-x-productBrand vtex-product-summary-2-x-productBrand--summaryName vtex-product-summary-2-x-brandName vtex-product-summary-2-x-brandName--summaryName t-body"]').text.replace(',', '.')
                 precio = producto.find_element(By.XPATH, './/div[@class="easycl-precio-cencosud-0-x-lastPrice "]').text
-                ScrapedData.objects.create(source="Easy", product_name=titulo, price=precio)
+                data.append(ScrapedData.objects.create(source="Easy", product_name=titulo, price=precio))
 
             try:
                 boton_siguiente = driver.find_element(By.XPATH, '//a[@class=" easycl-custom-blocks-4-x-customPagination__button easycl-custom-blocks-4-x-customPagination__buttonNext"]')
@@ -58,3 +58,5 @@ def run_easy_scraper():
                 break
 
     driver.quit()
+    print("Running easy scraper")
+    return {"scraper": "easy", "status": "success", "data": data }

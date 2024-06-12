@@ -10,7 +10,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from scrapper_app.models import ScrapedData
-
+data =[]
 def run_servimetal_scraper():
     opts = Options()
     opts.add_argument("user-agent=Mozilla/5.0")
@@ -36,7 +36,7 @@ def run_servimetal_scraper():
         for producto in productos:
             titulo = producto.find_element(By.XPATH, './td[2]/div/div[1]/a').text
             precio = producto.find_element(By.XPATH, './td[4]/div/div/span/div/span/span[2]').text
-            ScrapedData.objects.create(source="Servimetal", product_name=titulo, price=precio)
+            data.append(ScrapedData.objects.create(source="Servimetal", product_name=titulo, price=precio))
 
     for url in urls:
         driver.get(url)
@@ -56,3 +56,5 @@ def run_servimetal_scraper():
                 break
 
     driver.quit()
+    print("Running servimetal scraper")
+    return {"scraper": "servimetal", "status": "success", "data": data }

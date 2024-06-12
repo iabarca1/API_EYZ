@@ -10,7 +10,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from scrapper_app.models import ScrapedData
-
+data=[]
 def run_sodimac_scraper():
     opts = Options()
     opts.add_argument("user-agent=Mozilla/5.0")
@@ -46,7 +46,7 @@ def run_sodimac_scraper():
                 except:
                     precio = "Sin precio"
 
-                ScrapedData.objects.create(source="Sodimac", product_name=titulo.replace(',', '.'), price=precio)
+                data.append(ScrapedData.objects.create(source="Sodimac", product_name=titulo.replace(',', '.'), price=precio))
 
             try:
                 sleep(3)
@@ -59,3 +59,5 @@ def run_sodimac_scraper():
                 break
 
     driver.quit()
+    print("Running sodimac scraper")
+    return {"scraper": "sodimac", "status": "success", "data": data }
