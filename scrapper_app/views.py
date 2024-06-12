@@ -12,6 +12,8 @@ from scrapper_app.scrapers.run_all_scrapers import run_all_scrapers
 from .tasks import run_all_scrapers_task
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.http import JsonResponse
+from django.db import connection
 
 class ScrapedDataList(generics.ListCreateAPIView):
     queryset = ScrapedData.objects.all()
@@ -21,6 +23,24 @@ class RunKupferScraperView(APIView):
     def get(self, request, format=None):
         run_kupfer_scraper()
         return Response({"status": "Kupfer scraper run successfully"}, status=status.HTTP_200_OK)
+
+
+def get_precios(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT
+                precios.[KOPR] as 'Id_SKU',
+                maestro.NOKOPR,
+                precios.[PP02UD] as 'Precio EYZ'
+            FROM [BARRACA].[dbo].[TABPRE] as precios
+            LEFT JOIN MAEPR as maestro on precios.KOPR = maestro.KOPR
+            WHERE KOLT='01P'
+        """)
+        rows = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in rows]
+    return JsonResponse(data, safe=False)
+
 
 class RunAllScrapersView(APIView):
     def get(self, request, format=None):

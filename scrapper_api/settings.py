@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'api',
     'scrapper_app',  # Asegúrate de que tu aplicación esté aquí
 ]
 
@@ -60,8 +61,18 @@ WSGI_APPLICATION = 'scrapper_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.sql_server.pyodbc',
+        'NAME': 'BARRACA',
+        'USER': 'BARRACA',
+        'PASSWORD': 'BARRACA',
+        'HOST': '190.110.167.106,1688',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        },
+    }
 }
 
 # Password validation
