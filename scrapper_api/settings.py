@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 import dj_database_url  
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -61,14 +63,23 @@ WSGI_APPLICATION = 'scrapper_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+env = environ.Env()
+environ.Env.read_env()
 
+# Configuración de la base de datos
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+}
+
+# Si usas django-environ para cargar la configuración de la base de datos SQL Server
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sql_server.pyodbc',
-        'NAME': 'BARRACA',
-        'USER': 'BARRACA',
-        'PASSWORD': 'BARRACA',
-        'HOST': '190.110.167.106,1688',
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT', default='1433'),
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
         },
