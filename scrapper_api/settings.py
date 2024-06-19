@@ -79,7 +79,7 @@ CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
 # Database configuration
 DATABASES = {
     'default': {
-        'ENGINE': '',
+        'ENGINE': 'mssql',
         'NAME': env('DB_NAME', default='BARRACA'),
         'USER': env('DB_USER', default='BARRACA'),
         'PASSWORD': env('DB_PASSWORD', default='BARRACA'),
