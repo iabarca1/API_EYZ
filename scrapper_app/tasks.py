@@ -1,8 +1,29 @@
-# scrapper_app/tasks.py
-
 from celery import shared_task
-from .scrapers.run_all_scrapers import run_all_scrapers
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from .scrapers.kupfer4 import run_kupfer_scraper
 
 @shared_task
-def run_all_scrapers_task():
-    run_all_scrapers()
+def run_kupfer_scraper_task():
+    channel_layer = get_channel_layer()
+    
+    async_to_sync(channel_layer.group_send)(
+        "scrappers", 
+        {
+            "type": "scrapper.message",
+            "message": "Starting Kupfer scraper..."
+        }
+    )
+    
+    result = run_kupfer_scraper()
+    
+    async_to_sync(channel_layer.group_send)(
+        "scrappers", 
+        {
+            "type": "scrapper.message",
+            "message": "Kupfer scraper finished successfully",
+            "data": result
+        }
+    )
+    
+    return result

@@ -6,11 +6,12 @@ from scrapper_app.models import ScrapedData
 from scrapper_app.serializers import ScrapedDataSerializer
 from scrapper_app.scrapers.kupfer4 import run_kupfer_scraper
 from scrapper_app.scrapers.run_all_scrapers import run_all_scrapers
-from .tasks import run_all_scrapers_task
+#from .tasks import run_all_scrapers_task
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.http import JsonResponse
 from django.db import connection
+from .tasks import run_kupfer_scraper_task
 
 class ScrapedDataList(generics.ListCreateAPIView):
     queryset = ScrapedData.objects.all()
@@ -19,8 +20,8 @@ class ScrapedDataList(generics.ListCreateAPIView):
 class RunKupferScraperView(APIView):
     def get(self, request, format=None):
         try:
-            result = run_kupfer_scraper()
-            return Response(result, status=status.HTTP_200_OK)
+            run_kupfer_scraper_task.delay()
+            return Response({"status": "Kupfer scraper started"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
