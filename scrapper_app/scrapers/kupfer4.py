@@ -17,7 +17,6 @@ def run_kupfer_scraper():
         'https://www.kupfer.cl/aceros/pletinas.html'
     ]
 
-    # Configuración de opciones para el navegador Chrome
     opts = Options()
     opts.add_argument('--headless')
     opts.add_argument('--no-sandbox')

@@ -1,4 +1,3 @@
-# scrapper_app/views.py
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,9 +18,11 @@ class ScrapedDataList(generics.ListCreateAPIView):
 
 class RunKupferScraperView(APIView):
     def get(self, request, format=None):
-        run_kupfer_scraper()
-        return Response({"status": "Kupfer scraper run successfully"}, status=status.HTTP_200_OK)
-
+        try:
+            result = run_kupfer_scraper()
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def get_precios(request):
     with connection.cursor() as cursor:
@@ -38,7 +39,6 @@ def get_precios(request):
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in rows]
     return JsonResponse(data, safe=False)
-
 
 class RunAllScrapersView(APIView):
     def get(self, request, format=None):
