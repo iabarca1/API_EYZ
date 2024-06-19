@@ -1,1 +1,1 @@
-web: gunicorn scrapper_api.wsgi --timeout 6000
+web: gunicorn scrapper_api.wsgi --timeout 600

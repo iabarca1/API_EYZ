@@ -1,5 +1,3 @@
-# scrapper_app/scrapers/kupfer4.py
-
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -9,8 +7,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import NoSuchElementException
 from scrapper_app.models import ScrapedData
 
-data = []
 def run_kupfer_scraper():
+    data = []
+
     urls = [
         'https://www.kupfer.cl/aceros/perfiles.html',
         'https://www.kupfer.cl/aceros/angulos.html',
@@ -18,7 +17,12 @@ def run_kupfer_scraper():
         'https://www.kupfer.cl/aceros/pletinas.html'
     ]
 
+    # Configuración de opciones para el navegador Chrome
     opts = Options()
+    opts.add_argument('--headless')
+    opts.add_argument('--no-sandbox')
+    opts.add_argument('--disable-dev-shm-usage')
+    opts.add_argument('--disable-gpu')
     opts.add_argument("user-agent=Mozilla/5.0")
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opts)
@@ -55,5 +59,4 @@ def run_kupfer_scraper():
                 break
 
     driver.quit()
-    print("Running Kupfer scraper")
-    return {"scraper": "kupfer", "status": "success", "data": data }
+    return {"scraper": "kupfer", "status": "success", "data": data}
